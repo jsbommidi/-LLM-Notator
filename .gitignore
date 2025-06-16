@@ -47,4 +47,8 @@ Thumbs.db
 
 # Data files (optional - uncomment if you want to ignore data)
 # data/*.csv
-# data/*.jsonl 
+# data/*.jsonl
+
+# Documentation files
+app-info.md
+git-code.md
