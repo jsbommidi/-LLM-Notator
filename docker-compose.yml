@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  llm-notator-backend:
+    build: ./backend
+    container_name: llm-notator-backend
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - LLM_API_URL=${LLM_API_URL:-http://localhost:11434}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - llm-notator-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  llm-notator-frontend:
+    build: ./frontend
+    container_name: llm-notator-frontend
+    ports:
+      - "${FRONTEND_PORT:-3001}:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      llm-notator-backend:
+        condition: service_healthy
+    networks:
+      - llm-notator-network
+
+networks:
+  llm-notator-network:
+    driver: bridge
+
+volumes:
+  data: 
