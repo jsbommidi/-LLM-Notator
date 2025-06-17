@@ -1,22 +1,22 @@
 .container {
   background: var(--bg-secondary);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1rem;
+  border: none;
   flex-shrink: 0;
 }
 
 .title {
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.75rem 0;
   color: var(--text-primary);
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .field {
@@ -25,10 +25,10 @@
 }
 
 .label {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   font-weight: 500;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .select {
@@ -42,8 +42,8 @@
   font-family: inherit;
   font-size: 0.9rem;
   resize: vertical;
-  min-height: 80px;
-  max-height: 120px;
+  min-height: 100px;
+  max-height: 150px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   background-color: var(--bg-primary);
   color: var(--text-primary);
@@ -64,9 +64,9 @@
   background: var(--accent-primary);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.25rem;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
@@ -86,7 +86,7 @@
 .select .select__control {
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  min-height: 38px;
+  min-height: 36px;
   font-size: 0.9rem;
   background-color: var(--bg-primary);
 }
@@ -106,7 +106,7 @@
 
 .select .select__multi-value__label {
   color: var(--text-primary);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .select .select__multi-value__remove:hover {

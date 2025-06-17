@@ -1,23 +1,23 @@
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1rem;
   background: var(--bg-primary);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px var(--shadow);
+  border-radius: 8px;
+  box-shadow: none;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1rem;
+  padding-bottom: 0.75rem;
 }
 
 .header h1 {
   margin: 0 0 0.5rem 0;
   color: var(--text-primary);
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
 }
 
@@ -31,13 +31,13 @@
 .tabs {
   display: flex;
   border-bottom: 2px solid var(--border-color);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .tab {
   background: none;
   border: none;
-  padding: 0.75rem 1.25rem;
+  padding: 0.6rem 1rem;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
@@ -65,7 +65,7 @@
 .tabPanel {
   animation: fadeIn 0.3s ease-in-out;
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 /* Grid layout for data sources tab */
@@ -80,7 +80,7 @@
 
 .description {
   color: var(--text-secondary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   line-height: 1.6;
   grid-column: 1 / -1;
 }
@@ -88,9 +88,9 @@
 /* Settings sections */
 .sourceSection {
   margin-bottom: 0;
-  padding: 1.25rem;
+  padding: 1rem;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 6px;
   background-color: var(--bg-secondary);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -98,7 +98,7 @@
 .sourceSection h3 {
   margin: 0 0 0.5rem 0;
   color: var(--text-primary);
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -262,8 +262,8 @@
 .actions {
   display: flex;
   gap: 0.75rem;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--border-color);
   grid-column: 1 / -1;
 }
@@ -277,9 +277,9 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 1rem;
-    margin: 0.5rem;
-    border-radius: 8px;
+    padding: 0.75rem;
+    margin: 0.25rem;
+    border-radius: 6px;
   }
   
   .tabs {
@@ -306,6 +306,6 @@
   }
   
   .header h1 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 } 
