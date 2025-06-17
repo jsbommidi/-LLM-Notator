@@ -19,27 +19,27 @@ const ExampleDisplay: React.FC<ExampleDisplayProps> = ({
   onNext,
   isLoading = false,
 }) => {
-  const isFirstSample = currentIndex === 0;
-  const isLastSample = currentIndex === totalCount - 1;
+  const isFirstExample = currentIndex === 0;
+  const isLastExample = currentIndex === totalCount - 1;
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.titleSection}>
           <h2 className={styles.title}>
-            Sample {currentIndex + 1} of {totalCount}
+            Example {currentIndex + 1} of {totalCount}
           </h2>
           <div className={styles.navigationButtons}>
             <button
               onClick={onPrevious}
-              disabled={isFirstSample || isLoading}
+              disabled={isFirstExample || isLoading}
               className={`${styles.navButton} ${styles.previousButton}`}
             >
               ← Previous
             </button>
             <button
               onClick={onNext}
-              disabled={isLastSample || isLoading}
+              disabled={isLastExample || isLoading}
               className={`${styles.navButton} ${styles.nextButton}`}
             >
               Next →

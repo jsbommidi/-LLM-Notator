@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { ErrorCategory, AnnotationRequest } from '@/types';
+import { AnnotationRequest, ErrorCategory } from '@/types';
 import styles from './AnnotationForm.module.css';
+
+const errorCategories: ErrorCategory[] = [
+  { value: 'factual_error', label: 'Factual Error' },
+  { value: 'logical_error', label: 'Logical Error' },
+  { value: 'bias', label: 'Bias' },
+  { value: 'toxicity', label: 'Toxicity' },
+  { value: 'hallucination', label: 'Hallucination' },
+  { value: 'off_topic', label: 'Off Topic' },
+  { value: 'repetition', label: 'Repetition' },
+  { value: 'incomplete', label: 'Incomplete' },
+  { value: 'other', label: 'Other' },
+];
 
 interface AnnotationFormProps {
   exampleId: string;
@@ -9,25 +21,12 @@ interface AnnotationFormProps {
   isLoading?: boolean;
 }
 
-const ERROR_CATEGORIES: ErrorCategory[] = [
-  { value: 'accuracy', label: 'Accuracy' },
-  { value: 'relevance', label: 'Relevance' },
-  { value: 'clarity', label: 'Clarity' },
-  { value: 'completeness', label: 'Completeness' },
-  { value: 'helpfulness', label: 'Helpfulness' },
-  { value: 'safety', label: 'Safety' },
-  { value: 'bias', label: 'Bias' },
-  { value: 'coherence', label: 'Coherence' },
-  { value: 'factual_error', label: 'Factual Error' },
-  { value: 'formatting', label: 'Formatting' },
-];
-
 const AnnotationForm: React.FC<AnnotationFormProps> = ({
   exampleId,
   onSubmit,
   isLoading = false,
 }) => {
-  const [selectedLabels, setSelectedLabels] = useState<ErrorCategory[]>([]);
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,19 +34,17 @@ const AnnotationForm: React.FC<AnnotationFormProps> = ({
     e.preventDefault();
     
     if (selectedLabels.length === 0) {
-      alert('Please select at least one category.');
+      alert('Please select at least one label.');
       return;
     }
 
-    setIsSubmitting(true);
     try {
-      const annotation: AnnotationRequest = {
+      setIsSubmitting(true);
+      await onSubmit({
         id: exampleId,
-        labels: selectedLabels.map(label => label.value),
+        labels: selectedLabels,
         notes: notes.trim(),
-      };
-      
-      await onSubmit(annotation);
+      });
       
       // Reset form after successful submission
       setSelectedLabels([]);
@@ -60,44 +57,45 @@ const AnnotationForm: React.FC<AnnotationFormProps> = ({
     }
   };
 
-  const handleLabelChange = (newValue: readonly ErrorCategory[]) => {
-    setSelectedLabels([...newValue]);
+  const handleLabelChange = (selectedOptions: any) => {
+    const values = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
+    setSelectedLabels(values);
   };
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>Add Annotation</h3>
+      <h3 className={styles.title}>Annotate this Example</h3>
       
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
-          <label htmlFor="categories" className={styles.label}>
+          <label className={styles.label} htmlFor="labels">
             Error Categories *
           </label>
           <Select
-            id="categories"
+            id="labels"
             isMulti
-            value={selectedLabels}
+            options={errorCategories}
+            value={errorCategories.filter(category => selectedLabels.includes(category.value))}
             onChange={handleLabelChange}
-            options={ERROR_CATEGORIES}
+            placeholder="Select error categories..."
             className={styles.select}
             classNamePrefix="select"
-            placeholder="Select error categories..."
             isDisabled={isLoading || isSubmitting}
           />
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="notes" className={styles.label}>
-            Notes
+          <label className={styles.label} htmlFor="notes">
+            Notes (Optional)
           </label>
           <textarea
             id="notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Add any additional comments or observations..."
+            placeholder="Add any additional notes or comments..."
             className={styles.textarea}
-            rows={4}
             disabled={isLoading || isSubmitting}
+            rows={4}
           />
         </div>
 
