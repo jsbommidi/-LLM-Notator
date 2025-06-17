@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { AppSettings, SettingsContextType } from '@/types';
 import { loadSettings, saveSettings, resetSettings as resetStoredSettings, defaultSettings } from './settings';
+import { useTheme } from './useTheme';
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
@@ -21,6 +22,9 @@ interface SettingsProviderProps {
 export function SettingsProvider({ children }: SettingsProviderProps) {
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Apply theme
+  useTheme(settings.theme);
 
   // Load settings on mount
   useEffect(() => {
