@@ -52,7 +52,7 @@ func main() {
 
 	// Configure CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3001", "http://localhost:3000"}
+	config.AllowOrigins = []string{"http://localhost:5439", "http://localhost:4628"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
 	r.Use(cors.New(config))
@@ -68,10 +68,10 @@ func main() {
 	r.POST("/annotations", postAnnotationHandler)
 	r.GET("/export", exportAnnotationsHandler)
 
-	// Get port from environment or default to 8000
+	// Get port from environment or default to 9847
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8000"
+		port = "9847"
 	}
 
 	log.Printf("Server starting on port %s", port)
