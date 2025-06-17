@@ -1,14 +1,14 @@
 .container {
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   border-radius: 8px;
   padding: 1.5rem;
-  margin-top: 1rem;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .title {
   margin: 0 0 1rem 0;
-  color: #343a40;
+  color: var(--text-primary);
   font-size: 1.1rem;
   font-weight: 600;
 }
@@ -27,7 +27,7 @@
 .label {
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #495057;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -37,28 +37,31 @@
 
 .textarea {
   padding: 0.75rem;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-family: inherit;
   font-size: 0.9rem;
   resize: vertical;
-  min-height: 100px;
+  min-height: 80px;
+  max-height: 120px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .textarea:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--border-focus) 25%, transparent);
 }
 
 .textarea:disabled {
-  background-color: #e9ecef;
+  background-color: var(--bg-tertiary);
   opacity: 1;
 }
 
 .submitButton {
-  background: #007bff;
+  background: var(--accent-primary);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -71,41 +74,73 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  background: #0056b3;
+  background: var(--accent-hover);
 }
 
 .submitButton:disabled {
-  background: #6c757d;
+  background: var(--text-muted);
   cursor: not-allowed;
 }
 
 /* React Select custom styles */
 .select .select__control {
-  border: 1px solid #ced4da;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   min-height: 38px;
   font-size: 0.9rem;
+  background-color: var(--bg-primary);
 }
 
 .select .select__control:hover {
-  border-color: #adb5bd;
+  border-color: var(--text-muted);
 }
 
 .select .select__control--is-focused {
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--border-focus) 25%, transparent);
 }
 
 .select .select__multi-value {
-  background-color: #e9ecef;
+  background-color: var(--bg-secondary);
 }
 
 .select .select__multi-value__label {
-  color: #495057;
+  color: var(--text-primary);
   font-size: 0.85rem;
 }
 
 .select .select__multi-value__remove:hover {
-  background-color: #dc3545;
+  background-color: var(--danger);
   color: white;
+}
+
+.select .select__menu {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+}
+
+.select .select__option {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.select .select__option:hover {
+  background-color: var(--bg-secondary);
+}
+
+.select .select__option--is-selected {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+.select .select__option--is-focused {
+  background-color: var(--bg-secondary);
+}
+
+.select .select__single-value {
+  color: var(--text-primary);
+}
+
+.select .select__placeholder {
+  color: var(--text-muted);
 } 

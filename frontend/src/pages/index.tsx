@@ -198,6 +198,9 @@ const Home: React.FC = () => {
             example={currentExample}
             currentIndex={currentIndex}
             totalCount={examples.length}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            isLoading={isLoading}
           />
 
           <AnnotationForm
@@ -207,10 +210,6 @@ const Home: React.FC = () => {
           />
 
           <Navigation
-            currentIndex={currentIndex}
-            totalCount={examples.length}
-            onPrevious={handlePrevious}
-            onNext={handleNext}
             onExport={handleExport}
             isLoading={isLoading}
           />
