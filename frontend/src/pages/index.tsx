@@ -1,28 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Example, AnnotationRequest } from '@/types';
-import { api, ApiError } from '@/lib/api';
+import { api, ApiError, updateApiBaseUrl } from '@/lib/api';
+import { useSettings } from '@/lib/SettingsContext';
 import ExampleDisplay from '@/components/ExampleDisplay';
 import AnnotationForm from '@/components/AnnotationForm';
 import Navigation from '@/components/Navigation';
 import styles from '@/styles/Home.module.css';
 
 const Home: React.FC = () => {
+  const { settings } = useSettings();
   const [examples, setExamples] = useState<Example[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load examples on component mount
+  // Load examples on component mount and when settings change
   useEffect(() => {
     loadExamples();
   }, []);
+
+  // Update API base URL when settings change
+  useEffect(() => {
+    updateApiBaseUrl(settings.apiBaseUrl);
+  }, [settings.apiBaseUrl]);
+
+  // Auto-refresh based on settings
+  useEffect(() => {
+    if (settings.autoRefresh && settings.refreshInterval > 0) {
+      const intervalMs = settings.refreshInterval * 60 * 1000; // Convert minutes to milliseconds
+      const interval = setInterval(() => {
+        loadExamples();
+      }, intervalMs);
+
+      return () => clearInterval(interval);
+    }
+  }, [settings.autoRefresh, settings.refreshInterval]);
 
   const loadExamples = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const data = await api.getExamples();
+      // Use the configured data source for prompts/responses
+      const data = await api.getExamples(settings.promptSource);
       setExamples(data);
       setCurrentIndex(0);
     } catch (err) {
@@ -30,7 +50,7 @@ const Home: React.FC = () => {
       if (err instanceof ApiError) {
         setError(`Failed to load examples: ${err.message}`);
       } else {
-        setError('Failed to load examples. Please check if the backend is running.');
+        setError('Failed to load examples. Please check your data source configuration.');
       }
     } finally {
       setIsLoading(false);

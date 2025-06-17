@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import styles from './Navigation.module.css';
 
 interface NavigationProps {
@@ -46,6 +47,9 @@ const Navigation: React.FC<NavigationProps> = ({
       </div>
 
       <div className={styles.actions}>
+        <Link href="/settings" className={`${styles.button} ${styles.settingsButton}`}>
+          ⚙️ Settings
+        </Link>
         <button
           onClick={onExport}
           disabled={isLoading}

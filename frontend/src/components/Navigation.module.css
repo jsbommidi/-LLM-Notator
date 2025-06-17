@@ -56,6 +56,19 @@
   color: #1976d2;
 }
 
+.settingsButton {
+  background: #6c757d;
+  color: white;
+  border-color: #6c757d;
+  text-decoration: none;
+}
+
+.settingsButton:hover {
+  background: #5a6268;
+  border-color: #545b62;
+  text-decoration: none;
+}
+
 .exportButton {
   background: #28a745;
   color: white;
