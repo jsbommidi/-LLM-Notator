@@ -119,6 +119,20 @@ const Home: React.FC = () => {
         </Head>
 
         <main className={styles.main}>
+          <header className={styles.header}>
+            <div className={styles.headerContent}>
+              <div className={styles.titleSection}>
+                <h1 className={styles.title}>LLM Notator</h1>
+                <p className={styles.subtitle}>
+                  Review and annotate LLM input-output pairs
+                </p>
+              </div>
+              <Navigation
+                onExport={handleExport}
+                isLoading={isLoading}
+              />
+            </div>
+          </header>
           <div className={styles.loading}>
             <h1>Loading examples...</h1>
             <div className={styles.spinner}></div>
@@ -139,6 +153,20 @@ const Home: React.FC = () => {
         </Head>
 
         <main className={styles.main}>
+          <header className={styles.header}>
+            <div className={styles.headerContent}>
+              <div className={styles.titleSection}>
+                <h1 className={styles.title}>LLM Notator</h1>
+                <p className={styles.subtitle}>
+                  Review and annotate LLM input-output pairs
+                </p>
+              </div>
+              <Navigation
+                onExport={handleExport}
+                isLoading={isLoading}
+              />
+            </div>
+          </header>
           <div className={styles.error}>
             <h1>Error</h1>
             <p>{error}</p>
@@ -162,6 +190,20 @@ const Home: React.FC = () => {
         </Head>
 
         <main className={styles.main}>
+          <header className={styles.header}>
+            <div className={styles.headerContent}>
+              <div className={styles.titleSection}>
+                <h1 className={styles.title}>LLM Notator</h1>
+                <p className={styles.subtitle}>
+                  Review and annotate LLM input-output pairs
+                </p>
+              </div>
+              <Navigation
+                onExport={handleExport}
+                isLoading={isLoading}
+              />
+            </div>
+          </header>
           <div className={styles.empty}>
             <h1>No Examples Found</h1>
             <p>No examples are available for annotation.</p>
@@ -187,10 +229,18 @@ const Home: React.FC = () => {
 
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>LLM Notator</h1>
-          <p className={styles.subtitle}>
-            Review and annotate LLM input-output pairs
-          </p>
+          <div className={styles.headerContent}>
+            <div className={styles.titleSection}>
+              <h1 className={styles.title}>LLM Notator</h1>
+              <p className={styles.subtitle}>
+                Review and annotate LLM input-output pairs
+              </p>
+            </div>
+            <Navigation
+              onExport={handleExport}
+              isLoading={isLoading}
+            />
+          </div>
         </header>
 
         <div className={styles.content}>
@@ -206,11 +256,6 @@ const Home: React.FC = () => {
           <AnnotationForm
             exampleId={currentExample.id}
             onSubmit={handleAnnotationSubmit}
-            isLoading={isLoading}
-          />
-
-          <Navigation
-            onExport={handleExport}
             isLoading={isLoading}
           />
         </div>

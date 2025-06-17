@@ -20,22 +20,32 @@
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
 }
 
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+}
+
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: var(--text-primary);
-  margin: 0 0 0.5rem 0;
+  margin: 0;
 }
 
 .subtitle {
-  font-size: 1.1rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
   margin: 0;
 }
@@ -181,12 +191,18 @@
     padding: 0.5rem;
   }
 
+  .headerContent {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
   .title {
-    font-size: 2rem;
+    font-size: 1rem;
   }
 
   .subtitle {
-    font-size: 1rem;
+    font-size: 0.7rem;
   }
 
   .welcomeCard {
