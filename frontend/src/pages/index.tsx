@@ -3,22 +3,25 @@ import Head from 'next/head';
 import { Example, AnnotationRequest } from '@/types';
 import { api, ApiError, updateApiBaseUrl } from '@/lib/api';
 import { useSettings } from '@/lib/SettingsContext';
-import ExampleDisplay from '@/components/ExampleDisplay';
+
 import AnnotationForm from '@/components/AnnotationForm';
 import Navigation from '@/components/Navigation';
 import styles from '@/styles/Home.module.css';
+import ExampleDisplay from '@/components/ExampleDisplay';
+
 
 const Home: React.FC = () => {
   const { settings } = useSettings();
+  
+  
+  const [isLoading, setIsLoading] = useState(true);
   const [examples, setExamples] = useState<Example[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
 
   // Load examples on component mount and when settings change
-  useEffect(() => {
-    loadExamples();
-  }, []);
+  
 
   // Update API base URL when settings change
   useEffect(() => {
@@ -37,12 +40,16 @@ const Home: React.FC = () => {
     }
   }, [settings.autoRefresh, settings.refreshInterval]);
 
+  
+
+  // Function to load examples
   const loadExamples = async () => {
     try {
       setIsLoading(true);
       setError(null);
       // Use the configured data source for prompts/responses
-      const data = await api.getExamples(settings.promptSource);
+      const rawData = await api.getExamples(settings.promptSource);
+      const data = Array.isArray(rawData) ? rawData : [];
       setExamples(data);
       setCurrentIndex(0);
     } catch (err) {
@@ -56,6 +63,11 @@ const Home: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  // Load examples on mount and when promptSource changes
+  useEffect(() => {
+    loadExamples();
+  }, [settings.promptSource]);
 
   const handlePrevious = () => {
     if (currentIndex > 0) {

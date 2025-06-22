@@ -61,6 +61,11 @@ func main() {
 	if err := os.MkdirAll("data", 0755); err != nil {
 		log.Fatalf("Failed to create data directory: %v", err)
 	}
+	// Clear examples file on startup to avoid persisted samples
+	examplesPath := filepath.Join("data", "examples.jsonl")
+	if err := os.WriteFile(examplesPath, []byte{}, 0644); err != nil {
+		log.Printf("Failed to clear examples file: %v", err)
+	}
 
 	// Routes
 	r.GET("/health", healthHandler)
@@ -149,11 +154,9 @@ func exportAnnotationsHandler(c *gin.Context) {
 func loadExamples() ([]Example, error) {
 	filePath := filepath.Join("data", "examples.jsonl")
 	
-	// Check if file exists, create with sample data if not
+	// Check if file exists; if not, return empty example list
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		if err := createSampleData(); err != nil {
-			return nil, fmt.Errorf("failed to create sample data: %w", err)
-		}
+		return []Example{}, nil
 	}
 
 	file, err := os.Open(filePath)
