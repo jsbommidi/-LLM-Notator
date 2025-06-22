@@ -44,6 +44,7 @@ Thumbs.db
 
 # Docker
 .dockerignore
+docker-how-to-use.md
 
 # Data files (optional - uncomment if you want to ignore data)
 # data/*.csv
@@ -52,3 +53,6 @@ Thumbs.db
 # Documentation files
 app-info.md
 git-code.md
+
+# Next.js changes
+Next-changes.md
