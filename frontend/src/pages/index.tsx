@@ -24,6 +24,7 @@ const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
+  const [categoryNotes, setCategoryNotes] = useState<Record<string, string>>({});
   
 
   // Load examples on component mount and when settings change
@@ -98,11 +99,13 @@ const Home: React.FC = () => {
         id: examples[currentIndex].id,
         labels: selectedLabels,
         notes: notes.trim(),
+        categoryNotes: categoryNotes,
       });
       
       // Reset form after successful submission
       setSelectedLabels([]);
       setNotes('');
+      setCategoryNotes({});
       
       // Optionally move to next example after successful annotation
       if (currentIndex < examples.length - 1) {
@@ -259,6 +262,8 @@ const Home: React.FC = () => {
               isPlaceholder={true}
               selectedLabels={selectedLabels}
               onLabelsChange={setSelectedLabels}
+              categoryNotes={categoryNotes}
+              onCategoryNotesChange={setCategoryNotes}
               isDisabled={true}
             />
             
@@ -316,6 +321,8 @@ const Home: React.FC = () => {
             isPlaceholder={false}
             selectedLabels={selectedLabels}
             onLabelsChange={setSelectedLabels}
+            categoryNotes={categoryNotes}
+            onCategoryNotesChange={setCategoryNotes}
             isDisabled={isLoading}
           />
           

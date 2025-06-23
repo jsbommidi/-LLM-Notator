@@ -4,10 +4,16 @@ export interface Example {
   response: string;
 }
 
+export interface CategoryAnnotation {
+  category: string;
+  note?: string;
+}
+
 export interface Annotation {
   id: string;
   labels: string[];
   notes: string;
+  categoryNotes?: Record<string, string>;
   timestamp: string;
 }
 
@@ -15,6 +21,7 @@ export interface AnnotationRequest {
   id: string;
   labels: string[];
   notes: string;
+  categoryNotes?: Record<string, string>;
 }
 
 export interface ErrorCategory {
