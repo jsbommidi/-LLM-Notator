@@ -168,6 +168,23 @@
   margin-bottom: 1.5rem;
 }
 
+/* Placeholder note */
+.placeholderNote {
+  text-align: center;
+  background: var(--bg-primary);
+  border-radius: 6px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  margin-top: 0.75rem;
+  flex-shrink: 0;
+}
+
+.placeholderNote p {
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+  font-style: italic;
+}
+
 /* Retry button */
 .retryButton {
   background: var(--accent-primary);

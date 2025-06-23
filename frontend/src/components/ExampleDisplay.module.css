@@ -133,6 +133,15 @@
   color: var(--text-primary);
 }
 
+/* Placeholder styling */
+.promptBox.placeholder,
+.responseBox.placeholder {
+  font-style: italic;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border-style: dashed;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .container {

@@ -29,9 +29,15 @@ const AnnotationForm: React.FC<AnnotationFormProps> = ({
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const isPlaceholder = exampleId === 'placeholder';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isPlaceholder) {
+      return; // Don't submit for placeholder
+    }
     
     if (selectedLabels.length === 0) {
       alert('Please select at least one label.');
@@ -64,7 +70,9 @@ const AnnotationForm: React.FC<AnnotationFormProps> = ({
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>Annotate this Example</h3>
+      <h3 className={styles.title}>
+        {isPlaceholder ? 'Annotation Form Preview' : 'Annotate this Example'}
+      </h3>
       
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
@@ -77,10 +85,10 @@ const AnnotationForm: React.FC<AnnotationFormProps> = ({
             options={errorCategories}
             value={errorCategories.filter(category => selectedLabels.includes(category.value))}
             onChange={handleLabelChange}
-            placeholder="Select error categories..."
+            placeholder={isPlaceholder ? "Error categories will appear here..." : "Select error categories..."}
             className={styles.select}
             classNamePrefix="select"
-            isDisabled={isLoading || isSubmitting}
+            isDisabled={isLoading || isSubmitting || isPlaceholder}
           />
         </div>
 
@@ -92,19 +100,19 @@ const AnnotationForm: React.FC<AnnotationFormProps> = ({
             id="notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Add any additional notes or comments..."
+            placeholder={isPlaceholder ? "Notes and comments will go here..." : "Add any additional notes or comments..."}
             className={styles.textarea}
-            disabled={isLoading || isSubmitting}
+            disabled={isLoading || isSubmitting || isPlaceholder}
             rows={4}
           />
         </div>
 
         <button
           type="submit"
-          disabled={isLoading || isSubmitting || selectedLabels.length === 0}
+          disabled={isLoading || isSubmitting || selectedLabels.length === 0 || isPlaceholder}
           className={styles.submitButton}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Annotation'}
+          {isPlaceholder ? 'Preview Mode' : (isSubmitting ? 'Submitting...' : 'Submit Annotation')}
         </button>
       </form>
     </div>

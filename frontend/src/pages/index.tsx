@@ -192,6 +192,13 @@ const Home: React.FC = () => {
   }
 
   if (examples.length === 0) {
+    // Create placeholder example for display
+    const placeholderExample = {
+      id: 'placeholder',
+      prompt: 'This is where your prompts will appear. Upload your examples to start annotating.\n\nExample: "What is the capital of France?"',
+      response: 'This is where LLM responses will appear for annotation.\n\nExample: "Paris is the capital of France. It is located in the north-central part of the country and is known for its rich history, culture, and landmarks like the Eiffel Tower."'
+    };
+
     return (
       <div className={styles.container}>
         <Head>
@@ -216,9 +223,26 @@ const Home: React.FC = () => {
               />
             </div>
           </header>
-          <div className={styles.empty}>
-            <h1>No Examples Found</h1>
-            <p>No examples are available for annotation.</p>
+
+          <div className={styles.content}>
+            <ExampleDisplay
+              example={placeholderExample}
+              currentIndex={0}
+              totalCount={0}
+              onPrevious={() => {}}
+              onNext={() => {}}
+              isLoading={false}
+            />
+
+            <AnnotationForm
+              exampleId="placeholder"
+              onSubmit={async () => {}}
+              isLoading={false}
+            />
+          </div>
+
+          <div className={styles.placeholderNote}>
+            <p>🎯 This is a placeholder view. Add your examples to start annotating.</p>
             <button onClick={loadExamples} className={styles.retryButton}>
               Refresh
             </button>
