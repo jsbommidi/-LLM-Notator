@@ -8,6 +8,10 @@ import AnnotationForm from '@/components/AnnotationForm';
 import Navigation from '@/components/Navigation';
 import styles from '@/styles/Home.module.css';
 import ExampleDisplay from '@/components/ExampleDisplay';
+import PromptBox from '@/components/PromptBox';
+import ResponseBox from '@/components/ResponseBox';
+import ErrorCategoriesBox from '@/components/ErrorCategoriesBox';
+import NotesBox from '@/components/NotesBox';
 
 
 const Home: React.FC = () => {
@@ -18,6 +22,8 @@ const Home: React.FC = () => {
   const [examples, setExamples] = useState<Example[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const [notes, setNotes] = useState('');
   
 
   // Load examples on component mount and when settings change
@@ -81,16 +87,30 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleAnnotationSubmit = async (annotation: AnnotationRequest) => {
+  const handleAnnotationSubmit = async () => {
+    if (selectedLabels.length === 0) {
+      alert('Please select at least one error category.');
+      return;
+    }
+
     try {
-      await api.submitAnnotation(annotation);
+      await api.submitAnnotation({
+        id: examples[currentIndex].id,
+        labels: selectedLabels,
+        notes: notes.trim(),
+      });
+      
+      // Reset form after successful submission
+      setSelectedLabels([]);
+      setNotes('');
+      
       // Optionally move to next example after successful annotation
       if (currentIndex < examples.length - 1) {
         setCurrentIndex(currentIndex + 1);
       }
     } catch (err) {
       console.error('Failed to submit annotation:', err);
-      throw err; // Re-throw to let the form handle the error
+      alert('Failed to submit annotation. Please try again.');
     }
   };
 
@@ -195,8 +215,8 @@ const Home: React.FC = () => {
     // Create placeholder example for display
     const placeholderExample = {
       id: 'placeholder',
-      prompt: 'This is where your prompts will appear. Upload your examples to start annotating.\n\nExample: "What is the capital of France?"',
-      response: 'This is where LLM responses will appear for annotation.\n\nExample: "Paris is the capital of France. It is located in the north-central part of the country and is known for its rich history, culture, and landmarks like the Eiffel Tower."'
+      prompt: '',
+      response: ''
     };
 
     return (
@@ -225,27 +245,29 @@ const Home: React.FC = () => {
           </header>
 
           <div className={styles.content}>
-            <ExampleDisplay
+            <PromptBox
               example={placeholderExample}
-              currentIndex={0}
-              totalCount={0}
-              onPrevious={() => {}}
-              onNext={() => {}}
-              isLoading={false}
+              isPlaceholder={true}
             />
-
-            <AnnotationForm
-              exampleId="placeholder"
-              onSubmit={async () => {}}
-              isLoading={false}
+            
+            <ResponseBox
+              example={placeholderExample}
+              isPlaceholder={true}
             />
-          </div>
-
-          <div className={styles.placeholderNote}>
-            <p>🎯 This is a placeholder view. Add your examples to start annotating.</p>
-            <button onClick={loadExamples} className={styles.retryButton}>
-              Refresh
-            </button>
+            
+            <ErrorCategoriesBox
+              isPlaceholder={true}
+              selectedLabels={selectedLabels}
+              onLabelsChange={setSelectedLabels}
+              isDisabled={true}
+            />
+            
+            <NotesBox
+              isPlaceholder={true}
+              notes={notes}
+              onNotesChange={setNotes}
+              isDisabled={true}
+            />
           </div>
         </main>
       </div>
@@ -280,20 +302,58 @@ const Home: React.FC = () => {
         </header>
 
         <div className={styles.content}>
-          <ExampleDisplay
+          <PromptBox
             example={currentExample}
-            currentIndex={currentIndex}
-            totalCount={examples.length}
-            onPrevious={handlePrevious}
-            onNext={handleNext}
-            isLoading={isLoading}
+            isPlaceholder={false}
           />
-
-          <AnnotationForm
-            exampleId={currentExample.id}
-            onSubmit={handleAnnotationSubmit}
-            isLoading={isLoading}
+          
+          <ResponseBox
+            example={currentExample}
+            isPlaceholder={false}
           />
+          
+          <ErrorCategoriesBox
+            isPlaceholder={false}
+            selectedLabels={selectedLabels}
+            onLabelsChange={setSelectedLabels}
+            isDisabled={isLoading}
+          />
+          
+          <NotesBox
+            isPlaceholder={false}
+            notes={notes}
+            onNotesChange={setNotes}
+            isDisabled={isLoading}
+          />
+        </div>
+        
+        <div className={styles.navigationControls}>
+          <div className={styles.navigationInfo}>
+            Example {currentIndex + 1} of {examples.length} (ID: {currentExample.id})
+          </div>
+          <div className={styles.navigationButtons}>
+            <button
+              onClick={handlePrevious}
+              disabled={currentIndex === 0 || isLoading}
+              className={`${styles.navButton} ${styles.previousButton}`}
+            >
+              ← Previous
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={currentIndex === examples.length - 1 || isLoading}
+              className={`${styles.navButton} ${styles.nextButton}`}
+            >
+              Next →
+            </button>
+            <button
+              onClick={handleAnnotationSubmit}
+              disabled={isLoading || selectedLabels.length === 0}
+              className={styles.submitButton}
+            >
+              Submit Annotation
+            </button>
+          </div>
         </div>
       </main>
     </div>

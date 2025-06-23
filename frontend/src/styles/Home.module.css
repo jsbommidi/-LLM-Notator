@@ -51,11 +51,19 @@
 }
 
 .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.5rem;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+
+.content.singleColumn {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  flex: 1;
-  overflow: hidden;
 }
 
 .dashboard {
@@ -168,21 +176,73 @@
   margin-bottom: 1.5rem;
 }
 
-/* Placeholder note */
-.placeholderNote {
-  text-align: center;
+/* Navigation controls */
+.navigationControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
   background: var(--bg-primary);
   border-radius: 6px;
-  padding: 1rem;
   border: 1px solid var(--border-color);
-  margin-top: 0.75rem;
   flex-shrink: 0;
 }
 
-.placeholderNote p {
+.navigationInfo {
   color: var(--text-secondary);
-  margin: 0 0 1rem 0;
-  font-style: italic;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.navigationButtons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.navButton {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.navButton:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  border-color: var(--text-muted);
+}
+
+.navButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--bg-tertiary);
+}
+
+.submitButton {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.submitButton:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
 }
 
 /* Retry button */
@@ -220,6 +280,21 @@
 
   .subtitle {
     font-size: 0.7rem;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  .navigationControls {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .navigationButtons {
+    justify-content: center;
   }
 
   .welcomeCard {

@@ -1,11 +1,11 @@
 .container {
   background: var(--bg-primary);
   border-radius: 6px;
-  padding: 1rem;
+  padding: 0.75rem;
   border: none;
   box-shadow: none;
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -99,28 +99,31 @@
 .section {
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  flex: 1;
+  min-height: 0;
 }
 
 .sectionTitle {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.4rem 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .promptBox,
 .responseBox {
-  padding: 1rem;
+  padding: 0.75rem;
   border-radius: 4px;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  line-height: 1.5;
+  font-size: 0.9rem;
   white-space: pre-wrap;
   word-wrap: break-word;
-  min-height: 120px;
-  max-height: 300px;
+  min-height: 60px;
+  max-height: 250px;
   overflow-y: auto;
   border: 1px solid var(--border-color);
+  flex: 1;
 }
 
 .promptBox {

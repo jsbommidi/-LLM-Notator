@@ -1,9 +1,12 @@
 .container {
   background: var(--bg-secondary);
   border-radius: 6px;
-  padding: 1rem;
+  padding: 0.75rem;
   border: none;
-  flex-shrink: 0;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
@@ -22,6 +25,8 @@
 .field {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 .label {
@@ -31,19 +36,27 @@
   font-size: 0.85rem;
 }
 
+.sectionTitle {
+  margin: 0 0 0.4rem 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
 .select {
   font-size: 0.9rem;
 }
 
 .textarea {
-  padding: 0.75rem;
+  padding: 0.6rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-family: inherit;
-  font-size: 0.9rem;
-  resize: vertical;
-  min-height: 100px;
-  max-height: 150px;
+  font-size: 0.85rem;
+  resize: none;
+  flex: 1;
+  min-height: 60px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   background-color: var(--bg-primary);
   color: var(--text-primary);
