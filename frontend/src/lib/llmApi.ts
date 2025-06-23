@@ -96,12 +96,34 @@ export class LLMService {
   }
 }
 
-// Default LM Studio configuration
-export const createLMStudioService = (model: string = 'gemma-3-1b-it-qat'): LLMService => {
+// Create LLM service based on provider
+export const createLLMService = (provider: 'ollama' | 'lmstudio', baseUrl: string, model: string, apiKey?: string): LLMService => {
   return new LLMService({
-    baseUrl: 'http://127.0.0.1:1234',
-    model: model,
+    baseUrl,
+    model,
+    apiKey,
   });
+};
+
+// Default configurations for different providers
+export const getDefaultConfig = (provider: 'ollama' | 'lmstudio') => {
+  switch (provider) {
+    case 'ollama':
+      return {
+        baseUrl: 'http://localhost:11434',
+        model: 'llama2',
+      };
+    case 'lmstudio':
+      return {
+        baseUrl: 'http://127.0.0.1:1234',
+        model: 'gemma-3-1b-it-qat',
+      };
+    default:
+      return {
+        baseUrl: 'http://127.0.0.1:1234',
+        model: 'gemma-3-1b-it-qat',
+      };
+  }
 };
 
 export { LLMApiError }; 

@@ -57,6 +57,7 @@ export interface DataSource {
 
 export interface LLMSettings {
   enabled: boolean;
+  provider: 'ollama' | 'lmstudio';
   baseUrl: string;
   model: string;
   apiKey?: string;

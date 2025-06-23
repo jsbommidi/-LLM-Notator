@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Example } from '@/types';
-import { createLMStudioService, LLMApiError } from '@/lib/llmApi';
+import { createLLMService, LLMApiError } from '@/lib/llmApi';
 import { useSettings } from '@/lib/SettingsContext';
 import styles from './LLMGenerator.module.css';
 
@@ -17,7 +17,12 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const llmService = createLMStudioService(settings.llm.model);
+  const llmService = createLLMService(
+    settings.llm.provider,
+    settings.llm.baseUrl,
+    settings.llm.model,
+    settings.llm.apiKey
+  );
 
   const testConnection = async () => {
     try {
@@ -25,11 +30,11 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
       const connected = await llmService.testConnection();
       setIsConnected(connected);
       if (!connected) {
-        setError('Cannot connect to LM Studio. Make sure it\'s running on http://127.0.0.1:1234');
+        setError(`Cannot connect to ${settings.llm.provider}. Make sure it's running on ${settings.llm.baseUrl}`);
       }
     } catch (err) {
       setIsConnected(false);
-      setError('Failed to test connection to LM Studio');
+      setError(`Failed to test connection to ${settings.llm.provider}`);
     }
   };
 
@@ -79,7 +84,7 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
               isConnected === true ? styles.connected : 
               isConnected === false ? styles.disconnected : styles.unknown
             }`}
-            title="Test LM Studio connection"
+            title={`Test ${settings.llm.provider} connection`}
           >
             {isConnected === true ? '🟢' : 
              isConnected === false ? '🔴' : '⚪'} 
@@ -116,7 +121,7 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
 
       <div className={styles.info}>
         <small>
-          💡 This will send your prompt to LM Studio ({settings.llm.baseUrl}) and create a new example for annotation.
+          💡 This will send your prompt to {settings.llm.provider} ({settings.llm.baseUrl}) and create a new example for annotation.
         </small>
       </div>
     </div>

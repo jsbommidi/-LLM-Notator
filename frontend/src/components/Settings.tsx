@@ -20,6 +20,44 @@ const Settings: React.FC = () => {
     if (validationErrors.length === 0) {
       setSuccessMessage('Settings saved successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
+    } else {
+      // Auto-fix invalid API data sources by resetting them to defaults
+      const hasPromptSourceError = validationErrors.some(error => 
+        error.includes('Prompt source') && error.includes('Endpoint is required')
+      );
+      const hasResponseSourceError = validationErrors.some(error => 
+        error.includes('Response source') && error.includes('Endpoint is required')
+      );
+      
+      if (hasPromptSourceError || hasResponseSourceError) {
+        const updatedSettings = { ...settings };
+        if (hasPromptSourceError) {
+          updatedSettings.promptSource = {
+            type: 'file',
+            name: 'Local Examples File',
+            description: 'Load prompts from local examples.jsonl file',
+            config: {
+              filePath: '/data/examples.jsonl',
+              format: 'jsonl'
+            }
+          };
+        }
+        if (hasResponseSourceError) {
+          updatedSettings.responseSource = {
+            type: 'file',
+            name: 'Local Examples File',
+            description: 'Load responses from local examples.jsonl file',
+            config: {
+              filePath: '/data/examples.jsonl',
+              format: 'jsonl'
+            }
+          };
+        }
+        updateSettings(updatedSettings);
+        setSuccessMessage('Invalid data sources were reset to defaults');
+        setTimeout(() => setSuccessMessage(''), 3000);
+        setErrors([]);
+      }
     }
   };
 
@@ -179,11 +217,41 @@ const Settings: React.FC = () => {
                 />
                 Enable LLM Integration
               </label>
-              <p className={styles.hint}>Connect to LM Studio or other OpenAI-compatible local LLMs</p>
+              <p className={styles.hint}>Connect to Ollama or LM Studio for generating examples</p>
             </div>
 
             {settings.llm.enabled && (
               <>
+                <div className={styles.setting}>
+                  <label htmlFor="llmProvider">LLM Provider</label>
+                  <select
+                    id="llmProvider"
+                    value={settings.llm.provider}
+                    onChange={(e) => {
+                      const provider = e.target.value as 'ollama' | 'lmstudio';
+                      const defaultConfig = provider === 'ollama' 
+                        ? { baseUrl: 'http://localhost:11434', model: 'llama2' }
+                        : { baseUrl: 'http://127.0.0.1:1234', model: 'gemma-3-1b-it-qat' };
+                      
+                      updateSettings({ 
+                        llm: { 
+                          ...settings.llm, 
+                          provider,
+                          ...defaultConfig
+                        }
+                      });
+                    }}
+                    className={styles.select}
+                  >
+                    <option value="lmstudio">LM Studio</option>
+                    <option value="ollama">Ollama</option>
+                  </select>
+                  <p className={styles.hint}>
+                    Choose your local LLM provider. 
+                    Ollama (port 11434) or LM Studio (port 1234).
+                  </p>
+                </div>
+
                 <div className={styles.setting}>
                   <label htmlFor="llmBaseUrl">LLM Base URL</label>
                   <input
@@ -196,7 +264,10 @@ const Settings: React.FC = () => {
                     placeholder="http://127.0.0.1:1234"
                     className={styles.input}
                   />
-                  <p className={styles.hint}>Base URL for your local LLM server (LM Studio default: http://127.0.0.1:1234)</p>
+                  <p className={styles.hint}>
+                    Base URL for your {settings.llm.provider} server 
+                    ({settings.llm.provider === 'ollama' ? 'Ollama default: http://localhost:11434' : 'LM Studio default: http://127.0.0.1:1234'})
+                  </p>
                 </div>
 
                 <div className={styles.setting}>
@@ -211,7 +282,10 @@ const Settings: React.FC = () => {
                     placeholder="gemma-3-1b-it-qat"
                     className={styles.input}
                   />
-                  <p className={styles.hint}>Name of the model loaded in LM Studio</p>
+                  <p className={styles.hint}>
+                    Name of the model loaded in {settings.llm.provider}
+                    {settings.llm.provider === 'ollama' ? ' (e.g., llama2, codellama)' : ' (as shown in LM Studio)'}
+                  </p>
                 </div>
 
                 <div className={styles.setting}>
@@ -303,6 +377,39 @@ const Settings: React.FC = () => {
               <li key={index}>{error}</li>
             ))}
           </ul>
+          {errors.some(error => error.includes('Endpoint is required')) && (
+            <button 
+              onClick={() => {
+                updateSettings({
+                  promptSource: {
+                    type: 'file',
+                    name: 'Local Examples File',
+                    description: 'Load prompts from local examples.jsonl file',
+                    config: {
+                      filePath: '/data/examples.jsonl',
+                      format: 'jsonl'
+                    }
+                  },
+                  responseSource: {
+                    type: 'file',
+                    name: 'Local Examples File',
+                    description: 'Load responses from local examples.jsonl file',
+                    config: {
+                      filePath: '/data/examples.jsonl',
+                      format: 'jsonl'
+                    }
+                  }
+                });
+                setErrors([]);
+                setSuccessMessage('Data sources reset to defaults');
+                setTimeout(() => setSuccessMessage(''), 3000);
+              }}
+              className={`${styles.button} ${styles.primary}`}
+              style={{ marginTop: '0.5rem' }}
+            >
+              🔧 Fix Data Sources
+            </button>
+          )}
         </div>
       )}
 

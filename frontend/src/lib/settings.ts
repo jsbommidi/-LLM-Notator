@@ -31,6 +31,7 @@ export const defaultSettings: AppSettings = {
   theme: 'auto',
   llm: {
     enabled: false,
+    provider: 'lmstudio',
     baseUrl: 'http://127.0.0.1:1234',
     model: 'gemma-3-1b-it-qat',
   }
@@ -99,8 +100,25 @@ export function loadSettings(): AppSettings {
     const stored = localStorage.getItem(SETTINGS_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      // Merge with defaults to ensure all required fields exist
-      return { ...defaultSettings, ...parsed };
+      // Deep merge with defaults to ensure all required fields exist
+      const merged = {
+        ...defaultSettings,
+        ...parsed,
+        // Ensure nested objects are properly merged
+        promptSource: { ...defaultSettings.promptSource, ...parsed.promptSource },
+        responseSource: { ...defaultSettings.responseSource, ...parsed.responseSource },
+        llm: { ...defaultSettings.llm, ...parsed.llm },
+      };
+
+      // Validate and fix any data sources that might be invalid
+      if (merged.promptSource.type === 'api' && !merged.promptSource.config.endpoint) {
+        merged.promptSource = defaultSettings.promptSource;
+      }
+      if (merged.responseSource.type === 'api' && !merged.responseSource.config.endpoint) {
+        merged.responseSource = defaultSettings.responseSource;
+      }
+
+      return merged;
     }
   } catch (error) {
     console.warn('Failed to load settings from localStorage:', error);
@@ -126,6 +144,23 @@ export function resetSettings(): AppSettings {
     localStorage.removeItem(SETTINGS_KEY);
   }
   return defaultSettings;
+}
+
+// Utility function to clear potentially corrupted settings
+export function clearCorruptedSettings(): void {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(SETTINGS_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        console.log('Current stored settings:', parsed);
+      }
+      localStorage.removeItem(SETTINGS_KEY);
+      console.log('Settings cleared. Refresh the page to load defaults.');
+    } catch (error) {
+      console.error('Error clearing settings:', error);
+    }
+  }
 }
 
 // Validation functions
