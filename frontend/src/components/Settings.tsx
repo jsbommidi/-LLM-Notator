@@ -165,6 +165,71 @@ const Settings: React.FC = () => {
                 <p className={styles.hint}>How often to refresh data (1-1440 minutes)</p>
               </div>
             )}
+
+            <div className={styles.setting}>
+              <h3>LLM Integration</h3>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={settings.llm.enabled}
+                  onChange={(e) => updateSettings({ 
+                    llm: { ...settings.llm, enabled: e.target.checked }
+                  })}
+                  className={styles.checkbox}
+                />
+                Enable LLM Integration
+              </label>
+              <p className={styles.hint}>Connect to LM Studio or other OpenAI-compatible local LLMs</p>
+            </div>
+
+            {settings.llm.enabled && (
+              <>
+                <div className={styles.setting}>
+                  <label htmlFor="llmBaseUrl">LLM Base URL</label>
+                  <input
+                    id="llmBaseUrl"
+                    type="text"
+                    value={settings.llm.baseUrl}
+                    onChange={(e) => updateSettings({ 
+                      llm: { ...settings.llm, baseUrl: e.target.value }
+                    })}
+                    placeholder="http://127.0.0.1:1234"
+                    className={styles.input}
+                  />
+                  <p className={styles.hint}>Base URL for your local LLM server (LM Studio default: http://127.0.0.1:1234)</p>
+                </div>
+
+                <div className={styles.setting}>
+                  <label htmlFor="llmModel">Model Name</label>
+                  <input
+                    id="llmModel"
+                    type="text"
+                    value={settings.llm.model}
+                    onChange={(e) => updateSettings({ 
+                      llm: { ...settings.llm, model: e.target.value }
+                    })}
+                    placeholder="gemma-3-1b-it-qat"
+                    className={styles.input}
+                  />
+                  <p className={styles.hint}>Name of the model loaded in LM Studio</p>
+                </div>
+
+                <div className={styles.setting}>
+                  <label htmlFor="llmApiKey">API Key (Optional)</label>
+                  <input
+                    id="llmApiKey"
+                    type="password"
+                    value={settings.llm.apiKey || ''}
+                    onChange={(e) => updateSettings({ 
+                      llm: { ...settings.llm, apiKey: e.target.value || undefined }
+                    })}
+                    placeholder="Leave empty for local LM Studio"
+                    className={styles.input}
+                  />
+                  <p className={styles.hint}>API key if required (not needed for local LM Studio)</p>
+                </div>
+              </>
+            )}
           </div>
         )}
 

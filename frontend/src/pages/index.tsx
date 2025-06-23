@@ -12,6 +12,7 @@ import PromptBox from '@/components/PromptBox';
 import ResponseBox from '@/components/ResponseBox';
 import ErrorCategoriesBox from '@/components/ErrorCategoriesBox';
 import NotesBox from '@/components/NotesBox';
+import LLMGenerator from '@/components/LLMGenerator';
 
 
 const Home: React.FC = () => {
@@ -115,6 +116,11 @@ const Home: React.FC = () => {
       console.error('Failed to submit annotation:', err);
       alert('Failed to submit annotation. Please try again.');
     }
+  };
+
+  const handleExampleGenerated = (newExample: Example) => {
+    setExamples(prev => [...prev, newExample]);
+    setCurrentIndex(examples.length); // Navigate to the new example
   };
 
   const handleExport = async () => {
@@ -247,6 +253,8 @@ const Home: React.FC = () => {
             </div>
           </header>
 
+          <LLMGenerator onExampleGenerated={handleExampleGenerated} />
+
           <div className={styles.content}>
             <PromptBox
               example={placeholderExample}
@@ -305,6 +313,8 @@ const Home: React.FC = () => {
             />
           </div>
         </header>
+
+        <LLMGenerator onExampleGenerated={handleExampleGenerated} />
 
         <div className={styles.content}>
           <PromptBox

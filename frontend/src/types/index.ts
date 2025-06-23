@@ -55,6 +55,13 @@ export interface DataSource {
   };
 }
 
+export interface LLMSettings {
+  enabled: boolean;
+  baseUrl: string;
+  model: string;
+  apiKey?: string;
+}
+
 export interface AppSettings {
   promptSource: DataSource;
   responseSource: DataSource;
@@ -62,6 +69,7 @@ export interface AppSettings {
   autoRefresh: boolean;
   refreshInterval: number; // in minutes
   theme: 'light' | 'dark' | 'auto';
+  llm: LLMSettings;
 }
 
 export interface SettingsContextType {

@@ -28,7 +28,12 @@ export const defaultSettings: AppSettings = {
   apiBaseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9847',
   autoRefresh: false,
   refreshInterval: 30,
-  theme: 'auto'
+  theme: 'auto',
+  llm: {
+    enabled: false,
+    baseUrl: 'http://127.0.0.1:1234',
+    model: 'gemma-3-1b-it-qat',
+  }
 };
 
 // Predefined data source templates

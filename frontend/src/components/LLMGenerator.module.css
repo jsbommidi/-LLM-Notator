@@ -1,0 +1,143 @@
+.container {
+  background: var(--bg-primary);
+  border-radius: 6px;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  margin-bottom: 0.75rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+}
+
+.statusButton {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  color: var(--text-secondary);
+}
+
+.statusButton:hover {
+  background: var(--bg-secondary);
+}
+
+.statusButton.connected {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.statusButton.disconnected {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.statusButton.unknown {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+}
+
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.promptInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  resize: vertical;
+  min-height: 60px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: border-color 0.15s ease-in-out;
+}
+
+.promptInput:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--border-focus) 25%, transparent);
+}
+
+.promptInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.generateButton {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+  align-self: flex-start;
+}
+
+.generateButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.generateButton:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.error {
+  background: color-mix(in srgb, var(--danger) 10%, var(--bg-primary));
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--danger);
+  font-size: 0.8rem;
+}
+
+.info {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .inputSection {
+    margin-bottom: 0.75rem;
+  }
+  
+  .generateButton {
+    align-self: stretch;
+  }
+} 
