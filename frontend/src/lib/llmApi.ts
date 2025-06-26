@@ -16,6 +16,12 @@ export interface LLMResponse {
   }>;
 }
 
+export interface ProgressCallbacks {
+  onSending?: () => void;
+  onWaiting?: () => void;
+  onProcessing?: () => void;
+}
+
 class LLMApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
@@ -30,8 +36,10 @@ export class LLMService {
     this.config = config;
   }
 
-  async generateResponse(prompt: string): Promise<string> {
+  async generateResponse(prompt: string, callbacks?: ProgressCallbacks): Promise<string> {
     try {
+      callbacks?.onSending?.();
+      
       const response = await fetch(`${this.config.baseUrl}/v1/chat/completions`, {
         method: 'POST',
         headers: {
@@ -51,11 +59,14 @@ export class LLMService {
         }),
       });
 
+      callbacks?.onWaiting?.();
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new LLMApiError(response.status, `LLM API error: ${errorText}`);
       }
 
+      callbacks?.onProcessing?.();
       const data: LLMResponse = await response.json();
       
       if (!data.choices || data.choices.length === 0) {
@@ -71,8 +82,8 @@ export class LLMService {
     }
   }
 
-  async generateExample(prompt: string): Promise<Example> {
-    const response = await this.generateResponse(prompt);
+  async generateExample(prompt: string, callbacks?: ProgressCallbacks): Promise<Example> {
+    const response = await this.generateResponse(prompt, callbacks);
     
     return {
       id: `llm_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,

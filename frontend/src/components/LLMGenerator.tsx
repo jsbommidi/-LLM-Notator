@@ -8,12 +8,14 @@ interface LLMGeneratorProps {
   onExampleGenerated: (example: Example) => void;
 }
 
+type GenerationStatus = 'idle' | 'sending' | 'waiting' | 'processing';
+
 const LLMGenerator: React.FC<LLMGeneratorProps> = ({
   onExampleGenerated,
 }) => {
   const { settings } = useSettings();
   const [prompt, setPrompt] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStatus, setGenerationStatus] = useState<GenerationStatus>('idle');
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,9 +48,14 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
 
     try {
       setError(null);
-      setIsGenerating(true);
+      setGenerationStatus('idle');
       
-      const example = await llmService.generateExample(prompt.trim());
+      const example = await llmService.generateExample(prompt.trim(), {
+        onSending: () => setGenerationStatus('sending'),
+        onWaiting: () => setGenerationStatus('waiting'),
+        onProcessing: () => setGenerationStatus('processing'),
+      });
+      
       onExampleGenerated(example);
       setPrompt(''); // Clear prompt after successful generation
     } catch (err) {
@@ -58,7 +65,7 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
         setError('Failed to generate response from LLM');
       }
     } finally {
-      setIsGenerating(false);
+      setGenerationStatus('idle');
     }
   };
 
@@ -69,9 +76,38 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
     }
   };
 
+  const getStatusDisplay = () => {
+    switch (generationStatus) {
+      case 'sending':
+        return {
+          text: 'Sending prompt...',
+          icon: '📤',
+          className: styles.statusSending
+        };
+      case 'waiting':
+        return {
+          text: 'Waiting for LLM response...',
+          icon: '⏳',
+          className: styles.statusWaiting
+        };
+      case 'processing':
+        return {
+          text: 'Processing response...',
+          icon: '⚙️',
+          className: styles.statusProcessing
+        };
+      default:
+        return null;
+    }
+  };
+
+  const isGenerating = generationStatus !== 'idle';
+
   if (!settings.llm.enabled) {
     return null; // Don't render if LLM is disabled
   }
+
+  const statusDisplay = getStatusDisplay();
 
   return (
     <div className={styles.container}>
@@ -92,6 +128,14 @@ const LLMGenerator: React.FC<LLMGeneratorProps> = ({
           </button>
         </div>
       </div>
+
+      {statusDisplay && (
+        <div className={`${styles.generationStatus} ${statusDisplay.className}`}>
+          <span className={styles.statusIcon}>{statusDisplay.icon}</span>
+          <span className={styles.statusText}>{statusDisplay.text}</span>
+          <div className={styles.statusSpinner}></div>
+        </div>
+      )}
 
       <div className={styles.inputSection}>
         <textarea
