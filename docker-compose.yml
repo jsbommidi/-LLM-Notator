@@ -1,6 +1,50 @@
-version: '3.8'
-
 services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: llm-notator-postgres
+    environment:
+      - POSTGRES_DB=llm_notator
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGPORT=5435
+    ports:
+      - "5435:5435"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - llm-notator-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d llm_notator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Database Worker
+  db-worker:
+    build: ./db-worker
+    container_name: llm-notator-db-worker
+    ports:
+      - "9848:9848"
+    environment:
+      - PORT=9848
+      - DB_HOST=postgres
+      - DB_PORT=5435
+      - DB_NAME=llm_notator
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - llm-notator-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--output-document=/dev/null", "http://localhost:9848/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend API
   llm-notator-backend:
     build: ./backend
     container_name: llm-notator-backend
@@ -19,6 +63,7 @@ services:
       timeout: 10s
       retries: 3
 
+  # Frontend
   llm-notator-frontend:
     build: ./frontend
     container_name: llm-notator-frontend
@@ -27,8 +72,11 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://localhost:9847
+      - NEXT_PUBLIC_ARCHIVE_API_URL=http://localhost:9848
     depends_on:
       llm-notator-backend:
+        condition: service_healthy
+      db-worker:
         condition: service_healthy
     networks:
       - llm-notator-network
@@ -38,4 +86,5 @@ networks:
     driver: bridge
 
 volumes:
+  postgres_data:
   data: 

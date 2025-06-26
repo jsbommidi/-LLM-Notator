@@ -245,6 +245,27 @@
   cursor: not-allowed;
 }
 
+.archiveButton {
+  background: var(--success);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.archiveButton:hover:not(:disabled) {
+  background: var(--success-hover);
+}
+
+.archiveButton:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+}
+
 /* Retry button */
 .retryButton {
   background: var(--accent-primary);

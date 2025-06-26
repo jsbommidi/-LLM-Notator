@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Example, AnnotationRequest } from '@/types';
 import { api, ApiError, updateApiBaseUrl } from '@/lib/api';
+import { archiveApi, ArchiveApiError } from '@/lib/archiveApi';
 import { useSettings } from '@/lib/SettingsContext';
 
 import AnnotationForm from '@/components/AnnotationForm';
@@ -118,36 +119,56 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleArchiveSubmit = async () => {
+    if (selectedLabels.length === 0) {
+      alert('Please select at least one error category.');
+      return;
+    }
+
+    try {
+      // Save to archive (PostgreSQL database)
+      await archiveApi.createArchive({
+        prompt: examples[currentIndex].prompt,
+        response: examples[currentIndex].response,
+        error_categories: selectedLabels,
+        notes: notes.trim(),
+      });
+
+      // Also submit to the regular annotation system
+      await api.submitAnnotation({
+        id: examples[currentIndex].id,
+        labels: selectedLabels,
+        notes: notes.trim(),
+        categoryNotes: categoryNotes,
+      });
+      
+      // Reset form after successful submission
+      setSelectedLabels([]);
+      setNotes('');
+      setCategoryNotes({});
+      
+      alert('Successfully archived annotation!');
+      
+      // Optionally move to next example after successful annotation
+      if (currentIndex < examples.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
+    } catch (err) {
+      console.error('Failed to archive annotation:', err);
+      if (err instanceof ArchiveApiError) {
+        alert(`Failed to archive annotation: ${err.message}`);
+      } else {
+        alert('Failed to archive annotation. Please try again.');
+      }
+    }
+  };
+
   const handleExampleGenerated = (newExample: Example) => {
     setExamples(prev => [...prev, newExample]);
     setCurrentIndex(examples.length); // Navigate to the new example
   };
 
-  const handleExport = async () => {
-    try {
-      setIsLoading(true);
-      const blob = await api.exportAnnotations();
-      
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `annotations_${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Failed to export annotations:', err);
-      if (err instanceof ApiError) {
-        alert(`Failed to export annotations: ${err.message}`);
-      } else {
-        alert('Failed to export annotations. Please try again.');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   if (isLoading && examples.length === 0) {
     return (
@@ -169,7 +190,6 @@ const Home: React.FC = () => {
                 </p>
               </div>
               <Navigation
-                onExport={handleExport}
                 isLoading={isLoading}
               />
             </div>
@@ -203,7 +223,6 @@ const Home: React.FC = () => {
                 </p>
               </div>
               <Navigation
-                onExport={handleExport}
                 isLoading={isLoading}
               />
             </div>
@@ -247,7 +266,6 @@ const Home: React.FC = () => {
                 </p>
               </div>
               <Navigation
-                onExport={handleExport}
                 isLoading={isLoading}
               />
             </div>
@@ -308,7 +326,6 @@ const Home: React.FC = () => {
               </p>
             </div>
             <Navigation
-              onExport={handleExport}
               isLoading={isLoading}
             />
           </div>
@@ -369,6 +386,13 @@ const Home: React.FC = () => {
               className={styles.submitButton}
             >
               Submit Annotation
+            </button>
+            <button
+              onClick={handleArchiveSubmit}
+              disabled={isLoading || selectedLabels.length === 0}
+              className={styles.archiveButton}
+            >
+              📚 Archive
             </button>
           </div>
         </div>

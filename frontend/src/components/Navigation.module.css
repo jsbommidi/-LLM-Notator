@@ -57,20 +57,16 @@
   text-decoration: none;
 }
 
-.exportButton {
-  background: var(--success);
+.archiveButton {
+  background: var(--accent-primary);
   color: white;
-  border-color: var(--success);
+  border-color: var(--accent-primary);
 }
 
-.exportButton:hover:not(:disabled) {
-  background: var(--success-hover);
-  border-color: var(--success-hover);
-}
-
-.exportButton:disabled {
-  background: var(--text-muted);
-  border-color: var(--text-muted);
+.archiveButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  text-decoration: none;
 }
 
 /* Responsive design */

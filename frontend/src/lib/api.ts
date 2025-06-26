@@ -101,16 +101,7 @@ export const api = {
     });
   },
 
-  // Export annotations (returns blob for file download)
-  exportAnnotations: async (): Promise<Blob> => {
-    const response = await fetch(`${API_BASE_URL}/export`);
-    
-    if (!response.ok) {
-      throw new ApiError(response.status, 'Failed to export annotations');
-    }
-    
-    return response.blob();
-  },
+
 
   // Health check
   healthCheck: (): Promise<{ status: string }> => {

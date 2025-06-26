@@ -71,7 +71,6 @@ func main() {
 	r.GET("/health", healthHandler)
 	r.GET("/examples", getExamplesHandler)
 	r.POST("/annotations", postAnnotationHandler)
-	r.GET("/export", exportAnnotationsHandler)
 
 	// Get port from environment or default to 9847
 	port := os.Getenv("PORT")
@@ -131,23 +130,6 @@ func postAnnotationHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Annotation saved successfully", "id": annotation.ID})
-}
-
-// exportAnnotationsHandler serves the annotations CSV file for download
-func exportAnnotationsHandler(c *gin.Context) {
-	filePath := filepath.Join("data", "annotations.csv")
-	
-	// Check if file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No annotations found"})
-		return
-	}
-
-	// Set headers for file download
-	c.Header("Content-Disposition", "attachment; filename=annotations.csv")
-	c.Header("Content-Type", "text/csv")
-	
-	c.File(filePath)
 }
 
 // loadExamples reads and parses examples from the JSONL file

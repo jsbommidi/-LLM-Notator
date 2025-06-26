@@ -3,12 +3,10 @@ import Link from 'next/link';
 import styles from './Navigation.module.css';
 
 interface NavigationProps {
-  onExport: () => void;
   isLoading?: boolean;
 }
 
 const Navigation: React.FC<NavigationProps> = ({
-  onExport,
   isLoading = false,
 }) => {
   return (
@@ -16,16 +14,12 @@ const Navigation: React.FC<NavigationProps> = ({
       <div className={styles.spacer}></div>
       
       <div className={styles.actions}>
+        <Link href="/archive" className={`${styles.button} ${styles.compactButton} ${styles.archiveButton}`}>
+          📚 Archive
+        </Link>
         <Link href="/settings" className={`${styles.button} ${styles.compactButton} ${styles.settingsButton}`}>
           ⚙️ Settings
         </Link>
-        <button
-          onClick={onExport}
-          disabled={isLoading}
-          className={`${styles.button} ${styles.compactButton} ${styles.exportButton}`}
-        >
-          📊 Export
-        </button>
       </div>
     </div>
   );
