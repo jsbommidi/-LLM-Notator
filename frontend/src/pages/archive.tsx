@@ -89,9 +89,8 @@ const ArchivePage: React.FC = () => {
     return new Date(dateString).toLocaleString();
   };
 
-  const formatErrorCategories = (categories: string[]) => {
-    if (!categories || categories.length === 0) return 'None';
-    return categories.join(', ');
+  const formatErrorCategory = (category: string | null) => {
+    return category || 'None';
   };
 
   const truncateText = (text: string, maxLength: number = 100) => {
@@ -219,16 +218,11 @@ const ArchivePage: React.FC = () => {
 
                     <div className={styles.metaSection}>
                       <div className={styles.categories}>
-                        <strong>Categories:</strong> {formatErrorCategories(archive.error_categories)}
+                        <strong>Category:</strong> {formatErrorCategory(archive.error_category)}
                       </div>
-                      {archive.general_notes && (
+                      {archive.notes && (
                         <div className={styles.notes}>
-                          <strong>Notes:</strong> {truncateText(archive.general_notes, 50)}
-                        </div>
-                      )}
-                      {archive.example_id && (
-                        <div className={styles.exampleId}>
-                          <strong>Example ID:</strong> {archive.example_id}
+                          <strong>Notes:</strong> {truncateText(archive.notes, 50)}
                         </div>
                       )}
                     </div>
@@ -305,55 +299,23 @@ const ArchivePage: React.FC = () => {
                 </div>
 
                 <div className={styles.detailSection}>
-                  <h3>Error Categories</h3>
+                  <h3>Error Category</h3>
                   <div className={styles.detailContent}>
-                    {formatErrorCategories(selectedArchive.error_categories)}
+                    {formatErrorCategory(selectedArchive.error_category)}
                   </div>
                 </div>
 
-                {selectedArchive.general_notes && (
+                {selectedArchive.notes && (
                   <div className={styles.detailSection}>
-                    <h3>General Notes</h3>
-                    <div className={styles.detailContent}>{selectedArchive.general_notes}</div>
+                    <h3>Notes</h3>
+                    <div className={styles.detailContent}>{selectedArchive.notes}</div>
                   </div>
                 )}
-
-                {selectedArchive.category_notes && Object.keys(selectedArchive.category_notes).length > 0 && (
-                  <div className={styles.detailSection}>
-                    <h3>Category Notes</h3>
-                    <div className={styles.detailContent}>
-                      {Object.entries(selectedArchive.category_notes).map(([category, note]) => (
-                        <div key={category} className={styles.categoryNote}>
-                          <strong>{category}:</strong> {note}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className={styles.detailSection}>
-                  <h3>Metadata</h3>
-                  <div className={styles.metadataInfo}>
-                    {selectedArchive.example_id && (
-                      <div><strong>Example ID:</strong> {selectedArchive.example_id}</div>
-                    )}
-                    {selectedArchive.prompt_length && (
-                      <div><strong>Prompt Length:</strong> {selectedArchive.prompt_length} chars</div>
-                    )}
-                    {selectedArchive.response_length && (
-                      <div><strong>Response Length:</strong> {selectedArchive.response_length} chars</div>
-                    )}
-                    {selectedArchive.categories_count !== undefined && (
-                      <div><strong>Categories Count:</strong> {selectedArchive.categories_count}</div>
-                    )}
-                  </div>
-                </div>
 
                 <div className={styles.detailSection}>
                   <h3>Timestamps</h3>
                   <div className={styles.timestampInfo}>
                     <div><strong>Created:</strong> {formatDate(selectedArchive.created_at)}</div>
-                    <div><strong>Updated:</strong> {formatDate(selectedArchive.updated_at)}</div>
                   </div>
                 </div>
               </div>

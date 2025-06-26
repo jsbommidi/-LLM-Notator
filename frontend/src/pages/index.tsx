@@ -132,8 +132,6 @@ const Home: React.FC = () => {
         response: examples[currentIndex].response,
         error_categories: selectedLabels,
         notes: notes.trim(),
-        category_notes: categoryNotes,
-        example_id: examples[currentIndex].id,
       });
 
       // Also submit to the regular annotation system
