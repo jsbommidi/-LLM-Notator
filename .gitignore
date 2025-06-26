@@ -51,6 +51,11 @@ ports.md
 # data/*.csv
 # data/*.jsonl
 
+# Postgres data
+postgres_data/
+DATABASE_IMPROVEMENTS_SUMMARY.md
+
+
 # Documentation files
 app-info.md
 git-code.md

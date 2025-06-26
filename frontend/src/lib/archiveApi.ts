@@ -6,9 +6,16 @@ export interface ArchiveItem {
   prompt: string;
   response: string;
   error_categories: string[];
-  notes: string;
+  general_notes: string;
+  category_notes: Record<string, string>;
+  example_id?: string;
+  annotator_session_id?: string;
+  prompt_length?: number;
+  response_length?: number;
+  categories_count?: number;
   created_at: string;
   updated_at: string;
+  relevance?: number; // For search results
 }
 
 export interface CreateArchiveRequest {
@@ -16,6 +23,8 @@ export interface CreateArchiveRequest {
   response: string;
   error_categories: string[];
   notes: string;
+  category_notes?: Record<string, string>;
+  example_id?: string;
 }
 
 export interface ArchiveResponse {
